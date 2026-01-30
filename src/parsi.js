@@ -60,3 +60,37 @@ export function gregorianToParsi(gregDate, variant) {
   const day = (dayOfYear % 30) + 1;
   return { day, month, year, monthName: MONTH_NAMES[month - 1] };
 }
+
+function addDays(date, days) {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+function isFasliLeapYear(fasliYear) {
+  const gregApproxYear = fasliYear + 631;
+  return (gregApproxYear % 4 === 0 && gregApproxYear % 100 !== 0) || gregApproxYear % 400 === 0;
+}
+
+export function generateAnniversaries(baseGregorianDate, variant, count) {
+  const anniversaries = [];
+  let currentDate = new Date(baseGregorianDate);
+
+  for (let i = 0; i < count; i++) {
+    const parsiDate = gregorianToParsi(currentDate, variant);
+    anniversaries.push({
+      number: i + 1,
+      gregorianDate: new Date(currentDate),
+      parsiDate,
+    });
+
+    if (variant === FASLI) {
+      const nextYearLength = isFasliLeapYear(parsiDate.year) ? 366 : 365;
+      currentDate = addDays(currentDate, nextYearLength);
+    } else {
+      currentDate = addDays(currentDate, 365);
+    }
+  }
+
+  return anniversaries;
+}

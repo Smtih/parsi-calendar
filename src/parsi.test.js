@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ordinal, gregorianToParsi, SHAHENSHAHI, KADMI, FASLI } from "./parsi.js";
+import { ordinal, gregorianToParsi, generateAnniversaries, SHAHENSHAHI, KADMI, FASLI } from "./parsi.js";
 
 describe("ordinal", () => {
   it("handles 1st, 2nd, 3rd", () => {
@@ -58,5 +58,47 @@ describe("gregorianToParsi", () => {
   it("handles year rollover", () => {
     const result = gregorianToParsi(new Date(2026, 7, 15), SHAHENSHAHI);
     expect(result).toEqual({ day: 1, month: 1, year: 1395, monthName: "Fravardin" });
+  });
+});
+
+describe("generateAnniversaries", () => {
+  it("generates correct number of anniversaries", () => {
+    const base = new Date(2025, 7, 17);
+    const result = generateAnniversaries(base, SHAHENSHAHI, 5);
+    expect(result).toHaveLength(5);
+  });
+
+  it("first anniversary is the base date itself", () => {
+    const base = new Date(2025, 7, 17);
+    const result = generateAnniversaries(base, SHAHENSHAHI, 3);
+    expect(result[0].gregorianDate.getTime()).toBe(base.getTime());
+    expect(result[0].number).toBe(1);
+  });
+
+  it("Shahenshahi anniversaries are exactly 365 days apart", () => {
+    const base = new Date(2025, 7, 17);
+    const result = generateAnniversaries(base, SHAHENSHAHI, 3);
+    const d1 = result[0].gregorianDate;
+    const d2 = result[1].gregorianDate;
+    const d3 = result[2].gregorianDate;
+    const msPerDay = 86400000;
+    expect((d2 - d1) / msPerDay).toBe(365);
+    expect((d3 - d2) / msPerDay).toBe(365);
+  });
+
+  it("each anniversary has a parsi date", () => {
+    const base = new Date(2025, 7, 17);
+    const result = generateAnniversaries(base, SHAHENSHAHI, 2);
+    expect(result[0].parsiDate.monthName).toBe("Fravardin");
+    expect(result[1].parsiDate.year).toBe(result[0].parsiDate.year + 1);
+  });
+
+  it("Fasli anniversaries stay near the same Gregorian date", () => {
+    const base = new Date(2025, 2, 25);
+    const result = generateAnniversaries(base, FASLI, 5);
+    for (const ann of result) {
+      const month = ann.gregorianDate.getMonth();
+      expect(month === 2 || month === 3).toBe(true);
+    }
   });
 });
