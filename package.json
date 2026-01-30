@@ -1,0 +1,11 @@
+{
+  "name": "parsi-calendar",
+  "packageManager": "yarn@4.11.0",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.18"
+  }
+}
