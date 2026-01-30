@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parsi Calendar Event Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>Parsi Calendar Event Generator</h1>
+    <p>Generate calendar files (.ics) for recurring occasions on the Parsi calendar.</p>
+
+    <form id="event-form">
+      <label>
+        Subject
+        <input type="text" id="subject" value="Hoshi's">
+      </label>
+      <label>
+        Occasion
+        <input type="text" id="occasion" value="Birthday">
+      </label>
+      <label>
+        Date (Gregorian)
+        <input type="date" id="date">
+      </label>
+      <label>
+        Calendar
+        <select id="variant">
+          <option value="shahenshahi" selected>Shahenshahi</option>
+          <option value="kadmi">Kadmi</option>
+          <option value="fasli">Fasli</option>
+        </select>
+      </label>
+      <label>
+        Number of events
+        <input type="number" id="count" value="100" min="1" max="500">
+      </label>
+      <button type="submit">Download .ics</button>
+    </form>
+
+    <section id="preview">
+      <h2>Preview</h2>
+      <div id="preview-events"></div>
+    </section>
+  </main>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
