@@ -58,6 +58,15 @@ button:hover {
   background: #1d4ed8;
 }
 
+#cancel-btn {
+  background: #6b7280;
+  font-size: 0.85rem;
+}
+
+#cancel-btn:hover {
+  background: #4b5563;
+}
+
 #preview {
   margin-top: 2rem;
   padding-top: 1.5rem;

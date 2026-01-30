@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { generateICS } from "./ics.js";
+import { generateICS, generateCancelICS } from "./ics.js";
 
 describe("generateICS", () => {
   const mockAnniversaries = [
@@ -46,5 +46,35 @@ describe("generateICS", () => {
   it("ends with END:VCALENDAR", () => {
     const ics = generateICS(mockAnniversaries, "Hoshi's", "Birthday", "Shahenshahi");
     expect(ics.trim()).toMatch(/END:VCALENDAR$/);
+  });
+
+  it("uses deterministic UIDs based on subject, occasion, and number", () => {
+    const ics = generateICS(mockAnniversaries, "Hoshi's", "Birthday", "Shahenshahi");
+    expect(ics).toContain("UID:parsi-hoshis-birthday-1@parsi-calendar");
+    expect(ics).toContain("UID:parsi-hoshis-birthday-2@parsi-calendar");
+  });
+});
+
+describe("generateCancelICS", () => {
+  it("contains METHOD:CANCEL", () => {
+    const ics = generateCancelICS("Hoshi's", "Birthday", 3);
+    expect(ics).toContain("METHOD:CANCEL");
+  });
+
+  it("generates one VEVENT per event to cancel", () => {
+    const ics = generateCancelICS("Hoshi's", "Birthday", 3);
+    const eventCount = (ics.match(/BEGIN:VEVENT/g) || []).length;
+    expect(eventCount).toBe(3);
+  });
+
+  it("uses matching UIDs", () => {
+    const ics = generateCancelICS("Hoshi's", "Birthday", 2);
+    expect(ics).toContain("UID:parsi-hoshis-birthday-1@parsi-calendar");
+    expect(ics).toContain("UID:parsi-hoshis-birthday-2@parsi-calendar");
+  });
+
+  it("marks events as CANCELLED", () => {
+    const ics = generateCancelICS("Hoshi's", "Birthday", 1);
+    expect(ics).toContain("STATUS:CANCELLED");
   });
 });

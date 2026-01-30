@@ -14,6 +14,11 @@ function formatParsiDate(parsiDate, variant) {
   return `${parsiDate.day} ${parsiDate.monthName} ${parsiDate.year} YZ (${variantLabel})`;
 }
 
+function eventUID(subject, occasion, number) {
+  const slug = `${subject}-${occasion}-${number}`.toLowerCase().replace(/[^a-z0-9-]/g, "");
+  return `parsi-${slug}@parsi-calendar`;
+}
+
 export function generateICS(anniversaries, subject, occasion, variant) {
   const lines = [
     "BEGIN:VCALENDAR",
@@ -32,7 +37,31 @@ export function generateICS(anniversaries, subject, occasion, variant) {
       `DTSTART;VALUE=DATE:${dtstart}`,
       `SUMMARY:${summary}`,
       `DESCRIPTION:${description}`,
-      `UID:parsi-${dtstart}-${ann.number}@parsi-calendar`,
+      `UID:${eventUID(subject, occasion, ann.number)}`,
+      "END:VEVENT"
+    );
+  }
+
+  lines.push("END:VCALENDAR");
+  return lines.join("\r\n");
+}
+
+export function generateCancelICS(subject, occasion, count) {
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Parsi Calendar//EN",
+    "METHOD:CANCEL",
+  ];
+
+  for (let i = 1; i <= count; i++) {
+    lines.push(
+      "BEGIN:VEVENT",
+      `UID:${eventUID(subject, occasion, i)}`,
+      "DTSTART;VALUE=DATE:20000101",
+      "SEQUENCE:1",
+      "STATUS:CANCELLED",
+      `SUMMARY:${subject} ${ordinal(i)} ${occasion}`,
       "END:VEVENT"
     );
   }

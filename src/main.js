@@ -1,5 +1,5 @@
 import { generateAnniversaries, gregorianToParsi, ordinal, SHAHENSHAHI, KADMI, FASLI } from "./parsi.js";
-import { generateICS } from "./ics.js";
+import { generateICS, generateCancelICS } from "./ics.js";
 
 const form = document.getElementById("event-form");
 const subjectInput = document.getElementById("subject");
@@ -8,6 +8,7 @@ const dateInput = document.getElementById("date");
 const variantSelect = document.getElementById("variant");
 const countInput = document.getElementById("count");
 const previewContainer = document.getElementById("preview-events");
+const cancelBtn = document.getElementById("cancel-btn");
 
 function todayString() {
   const d = new Date();
@@ -87,4 +88,23 @@ form.addEventListener("submit", (e) => {
   a.download = `${subject.replace(/\s+/g, "-")}-${occasion.replace(/\s+/g, "-")}.ics`;
   a.click();
   URL.revokeObjectURL(url);
+});
+
+function downloadBlob(content, filename) {
+  const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+cancelBtn.addEventListener("click", () => {
+  const subject = subjectInput.value || subjectInput.placeholder;
+  const occasion = occasionInput.value || occasionInput.placeholder;
+  const count = parseInt(countInput.value, 10) || 100;
+
+  const ics = generateCancelICS(subject, occasion, count);
+  downloadBlob(ics, `cancel-${subject.replace(/\s+/g, "-")}-${occasion.replace(/\s+/g, "-")}.ics`);
 });
