@@ -24,8 +24,8 @@ function formatGregorianDisplay(date) {
 }
 
 function updatePreview() {
-  const subject = subjectInput.value || "Subject";
-  const occasion = occasionInput.value || "Occasion";
+  const subject = subjectInput.value || subjectInput.placeholder;
+  const occasion = occasionInput.value || occasionInput.placeholder;
   const dateVal = dateInput.value;
   if (!dateVal) {
     previewContainer.innerHTML = "";
@@ -64,8 +64,8 @@ updatePreview();
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const subject = subjectInput.value || "Subject";
-  const occasion = occasionInput.value || "Occasion";
+  const subject = subjectInput.value || subjectInput.placeholder;
+  const occasion = occasionInput.value || occasionInput.placeholder;
   const dateVal = dateInput.value;
   if (!dateVal) return;
 
