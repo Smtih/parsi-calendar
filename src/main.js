@@ -36,7 +36,10 @@ function updatePreview() {
   const baseDate = new Date(y, m - 1, d);
   const variant = variantSelect.value;
 
-  const preview = generateAnniversaries(baseDate, variant, 3);
+  const count = parseInt(countInput.value, 10) || 100;
+  const all = generateAnniversaries(baseDate, variant, count);
+  const mid = Math.floor(count / 2);
+  const preview = [all[0], all[mid - 1], all[count - 1]].filter(Boolean);
   const variantLabel =
     variant === "shahenshahi" ? "Shahenshahi" :
     variant === "kadmi" ? "Kadmi" : "Fasli";
