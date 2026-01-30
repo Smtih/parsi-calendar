@@ -68,10 +68,11 @@ describe("generateAnniversaries", () => {
     expect(result).toHaveLength(5);
   });
 
-  it("first anniversary is the base date itself", () => {
+  it("first anniversary is one Parsi year after the base date", () => {
     const base = new Date(2025, 7, 17);
     const result = generateAnniversaries(base, SHAHENSHAHI, 3);
-    expect(result[0].gregorianDate.getTime()).toBe(base.getTime());
+    const msPerDay = 86400000;
+    expect((result[0].gregorianDate - base) / msPerDay).toBe(365);
     expect(result[0].number).toBe(1);
   });
 

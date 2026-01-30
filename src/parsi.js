@@ -76,6 +76,13 @@ export function generateAnniversaries(baseGregorianDate, variant, count) {
   const anniversaries = [];
   let currentDate = new Date(baseGregorianDate);
 
+  const baseParsi = gregorianToParsi(currentDate, variant);
+  if (variant === FASLI) {
+    currentDate = addDays(currentDate, isFasliLeapYear(baseParsi.year) ? 366 : 365);
+  } else {
+    currentDate = addDays(currentDate, 365);
+  }
+
   for (let i = 0; i < count; i++) {
     const parsiDate = gregorianToParsi(currentDate, variant);
     anniversaries.push({
